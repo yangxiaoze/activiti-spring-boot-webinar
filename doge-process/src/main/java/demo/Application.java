@@ -285,21 +285,21 @@ class PhotoMvcController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
-    String upload(MultipartHttpServletRequest request, Principal principal) {
+    String upload(MultipartHttpServletRequest request  ) {
 
-        System.out.println("uploading for " + principal.toString());
+        Principal principal = null ;
+        String principalName = null == principal ? "jlong" : principal.toString();
+        System.out.println("uploading for " + principalName);
         Optional.ofNullable(request.getMultiFileMap()).ifPresent(m -> {
 
             // gather all the MFs in one collection
             List<MultipartFile> multipartFiles = new ArrayList<>();
-            m.values().forEach((t) -> {
-                multipartFiles.addAll(t);
-            });
+            m.values().forEach(multipartFiles::addAll);
 
             // convert them all into `Photo`s
             List<Photo> photos = multipartFiles.stream().map(f -> {
                 try {
-                    return this.photoService.createPhoto(principal.getName(), f.getInputStream());
+                    return this.photoService.createPhoto(principalName, f.getInputStream());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
