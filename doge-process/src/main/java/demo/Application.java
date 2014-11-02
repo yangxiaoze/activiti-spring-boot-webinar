@@ -30,8 +30,6 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.support.GenericHandler;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,19 +63,19 @@ public class Application {
         }
     }
 
-    @Configuration
-    static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .antMatchers("/approve").hasAuthority("photoReviewers")
-                    .antMatchers("/").authenticated()
-                    .and()
-                    .csrf().disable()
-                    .httpBasic();
-        }
-    }
-
+    /*   @Configuration
+       static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+           protected void configure(HttpSecurity http) throws Exception {
+               http
+                       .authorizeRequests()
+                       .antMatchers("/approve").hasAuthority("photoReviewers")
+                       .antMatchers("/").authenticated()
+                       .and()
+                       .csrf().disable()
+                       .httpBasic();
+           }
+       }
+   */
     @Bean
     IntegrationActivityBehavior activitiDelegate(ActivitiInboundGateway activitiInboundGateway) {
         return new IntegrationActivityBehavior(activitiInboundGateway);
